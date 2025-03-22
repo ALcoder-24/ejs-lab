@@ -54,12 +54,33 @@ const RESTAURANT = {
     ]
   }
   
+// Exercise #1
+app.set("view engine", "ejs");
 
 app.get('/', (req, res) => {
-  res.send('Hello There!');
+  res.locals.restaurant = RESTAURANT;
+  res.render("home");
+});
+
+app.get("/menu", (req, res)=>{
+res.locals.restaurant = RESTAURANT;
+res.render("menu");
+});
+
+app.get("/menu/:category", (req, res) => {
+const {category} =req.params;
+const menuItems = RESTAURANT.menu.filter(item => item.category.toLowerCase() === category.toLowerCase());
+
+const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+
+res.locals.category = formattedCategory;
+res.locals.menuItems = menuItems;
+
+res.render("category");
 });
 
 app.listen(3000, () => {
-console.clear();
+// console.clear();
 console.log("Running on port 3000 ")
 });
+
